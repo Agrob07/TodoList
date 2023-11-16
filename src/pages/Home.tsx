@@ -1,8 +1,8 @@
 import React from "react";
-import DisplayTodos from "../components/DisplayTodos";
-import Todos from "../components/Todos";
 import { motion } from "framer-motion";
 import { Box, Container } from "@mui/material";
+import TodoList from "../components/TodosLIst";
+import AddTodos from "../components/AddTodos";
 
 const Home = () => {
   return (
@@ -10,8 +10,8 @@ const Home = () => {
       maxWidth="md"
       sx={{
         backgroundColor: "#B4CBEE",
-        minHeight: "100vh",
-        minWidth: "100vw",
+        minHeight: "96vh",
+        minWidth: "100%",
         padding: "20px",
       }}
     >
@@ -28,10 +28,10 @@ const Home = () => {
       >
         <Box display="flex" flexDirection="column" alignItems="center">
           <Box width="100%" marginBottom={2}>
-            <Todos />
+            <AddTodos />
           </Box>
           <Box width="100%">
-            <DisplayTodos />
+            <TodoList />
           </Box>
         </Box>
       </motion.div>

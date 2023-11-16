@@ -1,6 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../redux/store";
+import { ITask } from "../../types/todos";
 
-const initialState = {
+export interface TodosState {
+  taskList: ITask[];
+  overdueTaskList: ITask[];
+  removedTasks: ITask[];
+}
+
+const initialState: TodosState = {
   taskList: [],
   overdueTaskList: [],
   removedTasks: [],
@@ -14,7 +22,17 @@ export const todoSlice = createSlice({
       state.taskList = [...state.taskList, action.payload];
       return state;
     },
-    saveEditedTask: (state, action) => {
+    updateTodos: (state, action) => {
+      state.taskList = state.taskList.map((task) => {
+        return task.id === action.payload.id
+          ? {
+              ...task,
+              ...action.payload,
+            }
+          : task;
+      });
+    },
+    EditTask: (state, action) => {
       state.taskList = state.taskList.map((task) =>
         task.id === action.payload.id ? action.payload : task
       );
@@ -35,19 +53,8 @@ export const todoSlice = createSlice({
         return todo;
       });
     },
-    updateTodos: (state, action) => {
-      state.taskList = state.taskList.map((task) => {
-        return task.id === action.payload.id
-          ? {
-              ...task,
-              ...action.payload,
-            }
-          : task;
-      });
-    },
     overdueTasks: (state, action) => {
       state.overdueTaskList = [...state.overdueTaskList, action.payload];
-      return state;
     },
     checkDeadline: (state, action) => {
       const currentDate = new Date();
@@ -94,7 +101,7 @@ export const todoSlice = createSlice({
 
 export const {
   addNewTask,
-  saveEditedTask,
+  EditTask,
   deleteTask,
   completeTodos,
   updateTodos,
@@ -104,8 +111,9 @@ export const {
   restoreTasks,
 } = todoSlice.actions;
 
-export const selectTaskList = (state) => state.todo.taskList;
-export const selectOverdueTaskList = (state) => state.todo.overdueTaskList;
-export const selectRemovedTasks = (state) => state.todo.removedTasks;
+export const selectTaskList = (state: RootState) => state.todo.taskList;
+export const selectOverdueTaskList = (state: RootState) =>
+  state.todo.overdueTaskList;
+export const selectRemovedTasks = (state: RootState) => state.todo.removedTasks;
 
 export default todoSlice.reducer;

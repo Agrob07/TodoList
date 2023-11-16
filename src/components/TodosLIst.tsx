@@ -7,7 +7,7 @@ import {
   deleteTask,
   removeTask,
   restoreTasks,
-  saveEditedTask,
+  EditTask,
   selectOverdueTaskList,
   selectRemovedTasks,
   selectTaskList,
@@ -15,40 +15,40 @@ import {
 } from "../redux/slice/todoSlice";
 import TodoItem from "./TodoItem";
 import TodoModal from "../modal/TodoModal";
+import { ITask } from "../types/todos";
 
-const DisplayTodos = () => {
+const TodoList = () => {
   const [sort, setSort] = useState("active");
   const [openIsModal, setOpenIsModal] = useState(false);
-  const [initialValues, setInitialValues] = useState(null);
+  const [initialValues, setInitialValues] = useState<ITask>();
   const dispatch = useDispatch();
   const taskList = useSelector(selectTaskList);
   const overdueTaskList = useSelector(selectOverdueTaskList);
   const removedTasks = useSelector(selectRemovedTasks);
 
-  const moveToTrash = (item) => {
+  const moveToTrash = (item: ITask) => {
     dispatch(removeTask(item));
   };
 
-  const updateTodo = (obj) => {
-    const updatedList = dispatch(updateTodos(obj));
-    setOpenIsModal(obj.isOnEdit);
+  const updateTodo = (item: ITask) => {
+    const updatedList = dispatch(updateTodos(item));
+    setOpenIsModal(item.isOnEdit);
     setInitialValues(updatedList.payload);
   };
 
-  const completeTodo = (id) => {
+  const completeTodo = (id: string) => {
     dispatch(completeTodos(id));
   };
 
-  const deleteItem = (id) => {
+  const deleteItem = (id: string) => {
     dispatch(deleteTask(id));
   };
-  const restoreItem = (id) => {
+  const restoreItem = (id: string) => {
     dispatch(restoreTasks(id));
   };
 
-  const handleSubmit = (values) => {
-    console.log(values, "formval");
-    dispatch(saveEditedTask({ ...values }));
+  const handleSubmit = (values: ITask) => {
+    dispatch(EditTask({ ...values }));
     setOpenIsModal(false);
   };
 
@@ -59,7 +59,7 @@ const DisplayTodos = () => {
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
             <Button
               variant="contained"
-              color="success"
+              color={sort === "active" ? "success" : "secondary"}
               onClick={() => setSort("active")}
             >
               Active
@@ -70,7 +70,7 @@ const DisplayTodos = () => {
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
             <Button
               variant="contained"
-              color="success"
+              color={sort === "completed" ? "success" : "secondary"}
               onClick={() => setSort("completed")}
             >
               Completed
@@ -81,7 +81,7 @@ const DisplayTodos = () => {
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
             <Button
               variant="contained"
-              color="success"
+              color={sort === "overdue" ? "success" : "secondary"}
               onClick={() => setSort("overdue")}
             >
               Overdue
@@ -92,7 +92,7 @@ const DisplayTodos = () => {
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
             <Button
               variant="contained"
-              color="success"
+              color={sort === "removed" ? "success" : "secondary"}
               onClick={() => setSort("removed")}
             >
               Trash
@@ -188,4 +188,4 @@ const DisplayTodos = () => {
   );
 };
 
-export default DisplayTodos;
+export default TodoList;

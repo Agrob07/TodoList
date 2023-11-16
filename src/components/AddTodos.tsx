@@ -5,31 +5,37 @@ import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { checkDeadline } from "../redux/slice/todoSlice";
 import { v4 as uuidv4 } from "uuid";
+import { ITask } from "../types/todos";
 
-const Todos = () => {
+const AddTodos = () => {
   const dispatch = useDispatch();
   const [openIsModal, setOpenIsModal] = useState(false);
-  const [initialValues, setInitialValues] = useState({
+  const [formValues, setFormValues] = useState({
+    id: "",
     title: "",
     description: "",
     deadline: "",
+    completed: false,
+    isOnEdit: false,
   });
 
   const handleCLick = () => {
     setOpenIsModal(true);
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = (values: ITask) => {
     const id = uuidv4();
     dispatch(
       checkDeadline({ ...values, id, completed: false, isOnEdit: false })
     );
     setOpenIsModal(false);
-
-    setInitialValues({
+    setFormValues({
+      id: "",
       title: "",
       description: "",
       deadline: "",
+      completed: false,
+      isOnEdit: false,
     });
   };
 
@@ -43,10 +49,10 @@ const Todos = () => {
         setOpenIsModal={setOpenIsModal}
         title={"Add Tasks"}
         handleSubmit={handleSubmit}
-        initialValues={initialValues}
+        initialValues={formValues}
       />
     </motion.div>
   );
 };
 
-export default Todos;
+export default AddTodos;

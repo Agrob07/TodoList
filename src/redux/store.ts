@@ -6,3 +6,6 @@ export const store = configureStore({
     todo: todoReducer,
   },
 });
+
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;

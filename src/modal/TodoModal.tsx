@@ -9,6 +9,15 @@ import {
   DialogActions,
 } from "@mui/material";
 import { validationSchema } from "./validation/validationSchema";
+import { ITask } from "../types/todos";
+
+interface IProps {
+  initialValues: ITask;
+  handleSubmit: (values: ITask) => void;
+  title: string;
+  isOpen: boolean;
+  setOpenIsModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 const TodoModal = ({
   initialValues,
@@ -16,16 +25,14 @@ const TodoModal = ({
   title,
   isOpen,
   setOpenIsModal,
-}) => {
+}: IProps) => {
   const formik = useFormik({
-    initialValues: initialValues,
-    onSubmit: handleSubmit || (() => {}),
-    validationSchema: validationSchema || undefined,
-    title: title || "Tasks",
+    initialValues,
+    onSubmit: handleSubmit,
+    validationSchema,
   });
 
   useEffect(() => {
-    // Reset formik values when initialValues change
     formik.resetForm({ values: initialValues });
   }, [initialValues]);
 
@@ -86,7 +93,7 @@ const TodoModal = ({
         <Button onClick={handleClose} color="secondary">
           Cancel
         </Button>
-        <Button onClick={formik.handleSubmit} color="primary">
+        <Button color="primary" onClick={() => formik.handleSubmit()}>
           Submit
         </Button>
       </DialogActions>

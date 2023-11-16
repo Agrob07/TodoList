@@ -1,11 +1,22 @@
 import React from "react";
-import { IoCheckmarkDoneSharp, IoClose } from "react-icons/io5";
 import { motion } from "framer-motion";
+import { Card, CardContent, Typography, IconButton, Grid } from "@mui/material";
+import { IoCheckmarkDoneSharp, IoClose } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
 import { MdEdit, MdSettingsBackupRestore } from "react-icons/md";
-import { Card, CardContent, Typography, IconButton, Grid } from "@mui/material";
+import { ITask } from "../types/todos";
 
-const TodoItem = (props) => {
+interface IProps {
+  item: ITask;
+  sort: string;
+  updateTodo?: (item: ITask) => void;
+  moveToTrash?: (item: ITask) => void;
+  completeTodo?: (id: string) => void;
+  deleteItem?: (id: string) => void;
+  restoreItem?: (id: string) => void;
+}
+
+const TodoItem = (props: IProps) => {
   const {
     item,
     updateTodo,
@@ -19,10 +30,15 @@ const TodoItem = (props) => {
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <motion.li
-        initial={{
-          x: "150vw",
-          transition: { type: "spring", duration: 2 },
-        }}
+        initial={
+          {
+            x: "150vw",
+            transition: {
+              type: "spring",
+              duration: 2,
+            },
+          } as any
+        }
         animate={{ x: 0, transition: { type: "spring", duration: 2 } }}
         whileHover={{
           scale: 0.9,
@@ -51,7 +67,7 @@ const TodoItem = (props) => {
               {item.description}
             </Typography>
             <Typography variant="body2" component="p">
-              Deadline: {item.deadline}
+              Deadline: {item.deadline as any}
             </Typography>
             <div
               style={{
@@ -66,7 +82,7 @@ const TodoItem = (props) => {
                     color: "orange",
                   }}
                   onClick={() => {
-                    updateTodo({ ...item, isOnEdit: true });
+                    updateTodo?.({ ...item, isOnEdit: true });
                   }}
                 >
                   <MdEdit />
@@ -80,7 +96,7 @@ const TodoItem = (props) => {
                       color: "green",
                     }}
                     onClick={() => {
-                      completeTodo(item.id);
+                      completeTodo?.(item.id);
                     }}
                   >
                     <IoCheckmarkDoneSharp />
@@ -89,7 +105,7 @@ const TodoItem = (props) => {
               {sort === "removed" || (
                 <IconButton
                   style={{ color: "gray" }}
-                  onClick={() => moveToTrash(item)}
+                  onClick={() => moveToTrash?.(item)}
                 >
                   <FaTrash />
                 </IconButton>
@@ -99,7 +115,7 @@ const TodoItem = (props) => {
                 sort === "active" || (
                   <IconButton
                     style={{ color: "red" }}
-                    onClick={() => deleteItem(item.id)}
+                    onClick={() => deleteItem?.(item.id)}
                   >
                     <IoClose />
                   </IconButton>
@@ -109,7 +125,7 @@ const TodoItem = (props) => {
                 sort === "active" || (
                   <IconButton
                     style={{ color: "blue" }}
-                    onClick={() => restoreItem(item.id)}
+                    onClick={() => restoreItem?.(item.id)}
                   >
                     <MdSettingsBackupRestore />
                   </IconButton>
